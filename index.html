@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Jet Academy</title>
 
   <link rel="manifest" href="manifest.json" />
@@ -16,24 +16,35 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
-      height: 100%;
+      width: 100%; height: 100%;
       background: #0D1117;
-      font-family: 'Nunito', sans-serif;
-      color: #fff;
       overflow: hidden;
     }
-    body {
+    #frame {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #0D1117;
+    }
+    /* Splash shown while iframe loads */
+    #splash {
+      position: fixed;
+      inset: 0;
+      background: #0D1117;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 24px;
-      padding: 32px;
+      gap: 20px;
+      z-index: 10;
+      transition: opacity .4s ease;
     }
-    img.logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 24px;
+    #splash.hide { opacity: 0; pointer-events: none; }
+    #splash img {
+      width: 110px; height: 110px;
+      border-radius: 22px;
       animation: float 3s ease-in-out infinite;
     }
     @keyframes float {
@@ -41,60 +52,57 @@
       50%      { transform: translateY(-10px); }
     }
     .title {
-      font-size: 28px;
+      font-family: sans-serif;
+      font-size: 26px;
       font-weight: 900;
-      text-align: center;
-      background: linear-gradient(135deg, #58CC02, #1CB0F6);
+      background: linear-gradient(135deg,#58CC02,#1CB0F6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .sub {
-      font-size: 15px;
-      color: #8b949e;
-      text-align: center;
-      line-height: 1.5;
-    }
     .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid rgba(88,204,2,.2);
+      width: 32px; height: 32px;
+      border: 3px solid rgba(88,204,2,.15);
       border-top-color: #58CC02;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin .7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .msg {
-      font-size: 13px;
-      color: #8b949e;
-    }
   </style>
 </head>
 <body>
-  <img class="logo" src="icons/icon-512x512.png" alt="Jet Academy" />
-  <div class="title">Jet Academy</div>
-  <div class="sub">Treinamento de Promotores</div>
-  <div class="spinner"></div>
-  <div class="msg" id="msg">Abrindo o app…</div>
+
+  <!-- Splash screen -->
+  <div id="splash">
+    <img src="icons/icon-512x512.png" alt="Jet Academy" />
+    <div class="title">Jet Academy</div>
+    <div class="spinner"></div>
+  </div>
+
+  <!-- App iframe -->
+  <iframe
+    id="frame"
+    src="https://script.google.com/macros/s/AKfycbwf06-v_N-rtDBgKGrT9SkszDznsxfrYCKIJKPVKxT0OAVVuXUuQ7TVd_3_lg1cgI3cRA/exec"
+    allow="clipboard-write"
+    loading="eager"
+  ></iframe>
 
   <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwf06-v_N-rtDBgKGrT9SkszDznsxfrYCKIJKPVKxT0OAVVuXUuQ7TVd_3_lg1cgI3cRA/exec';
-
-    // Preserve any ?token= or ?t= params
-    const params = window.location.search;
-    const target = GAS_URL + (params || '');
-
-    // Register SW for PWA installability
+    // Register SW — required for PWA install prompt
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 
-    // Redirect immediately
-    window.location.replace(target);
+    // Hide splash once iframe fires load (or after 4s fallback)
+    const frame = document.getElementById('frame');
+    const splash = document.getElementById('splash');
 
-    // Fallback message if redirect takes too long
-    setTimeout(() => {
-      document.getElementById('msg').innerHTML =
-        'Redirecionando… <a href="' + target + '" style="color:#58CC02">clique aqui</a>';
-    }, 2000);
+    function hideSplash() {
+      splash.classList.add('hide');
+      setTimeout(() => splash.remove(), 500);
+    }
+
+    frame.addEventListener('load', hideSplash);
+    setTimeout(hideSplash, 4000);
   </script>
 </body>
 </html>
