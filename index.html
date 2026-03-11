@@ -15,14 +15,14 @@
   <meta name="theme-color" content="#0D1117">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
-    :root{--green:#58CC02;--blue:#1CB0F6;--gold:#FFD900;--bg:#0D1117;--border:rgba(255,255,255,.08);}
+    :root{--green:#58CC02;--blue:#1CB0F6;--bg:#0D1117;--border:rgba(255,255,255,.08);}
     html,body{height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Nunito',sans-serif;color:#fff;overflow:hidden;}
 
     /* ── SPLASH ── */
     #splash{
       position:fixed;inset:0;display:flex;flex-direction:column;
       align-items:center;justify-content:center;gap:24px;
-      background:var(--bg);transition:opacity .5s;z-index:10;
+      background:var(--bg);transition:opacity .5s;z-index:10;padding:32px;
     }
     #splash.hide{opacity:0;pointer-events:none;}
     .splash-logo{width:130px;height:130px;border-radius:28px;
@@ -32,19 +32,19 @@
     .splash-name{font-size:30px;font-weight:900;letter-spacing:1px;
       background:linear-gradient(135deg,var(--green),var(--blue));
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .splash-sub{font-size:14px;color:rgba(255,255,255,.4);letter-spacing:.5px;}
+    .splash-sub{font-size:14px;color:rgba(255,255,255,.4);}
     .splash-bar{width:160px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
     .splash-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));
       border-radius:2px;animation:prog 1.6s ease forwards;}
     @keyframes prog{from{width:0;}to{width:100%;}}
 
-    /* ── BANNER DE INSTALACAO ── */
+    /* ── BANNER ── */
     #installBanner{
       position:fixed;bottom:0;left:0;right:0;z-index:100;
       background:linear-gradient(180deg,#161b22 0%,#0d1117 100%);
       border-top:1px solid rgba(88,204,2,.2);
       border-radius:24px 24px 0 0;
-      padding:28px 24px 40px;
+      padding:28px 24px 44px;
       transform:translateY(100%);
       transition:transform .4s cubic-bezier(.34,1.56,.64,1);
       box-shadow:0 -8px 40px rgba(0,0,0,.6);
@@ -57,19 +57,18 @@
     .banner-title{font-size:20px;font-weight:700;margin-bottom:4px;}
     .banner-desc{font-size:14px;color:rgba(255,255,255,.5);line-height:1.4;}
     .banner-badge{display:flex;align-items:center;gap:6px;margin-top:8px;}
-    .badge-dot{width:8px;height:8px;border-radius:50%;background:var(--green);
-      box-shadow:0 0 6px var(--green);}
+    .badge-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);}
     .badge-text{font-size:12px;color:var(--green);font-weight:600;}
     .banner-steps{background:rgba(255,255,255,.04);border-radius:14px;
       padding:16px;margin-bottom:20px;display:none;}
     .banner-steps.visible{display:block;}
     .step{display:flex;align-items:center;gap:12px;padding:8px 0;
-      border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;color:rgba(255,255,255,.7);}
+      border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;color:rgba(255,255,255,.75);}
     .step:last-child{border-bottom:none;padding-bottom:0;}
-    .step-num{width:26px;height:26px;border-radius:50%;
+    .step-num{width:26px;height:26px;border-radius:50%;flex-shrink:0;
       background:linear-gradient(135deg,var(--green),var(--blue));
       display:flex;align-items:center;justify-content:center;
-      font-size:12px;font-weight:700;color:#000;flex-shrink:0;}
+      font-size:12px;font-weight:700;color:#000;}
     .banner-btns{display:flex;gap:12px;}
     .btn-install{flex:1;padding:16px;border:none;border-radius:14px;
       background:linear-gradient(135deg,var(--green),var(--blue));
@@ -78,7 +77,6 @@
     .btn-install:active{transform:scale(.97);}
     .btn-later{padding:16px 20px;border:1px solid var(--border);border-radius:14px;
       background:transparent;color:rgba(255,255,255,.4);font-size:14px;cursor:pointer;}
-    .btn-later:active{background:rgba(255,255,255,.05);}
 
     /* ── OVERLAY ── */
     #overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);
@@ -88,20 +86,17 @@
 </head>
 <body>
 
-<!-- SPLASH -->
 <div id="splash">
   <img class="splash-logo" src="icons/icon-512x512.png" alt="Jet Academy">
-  <div>
+  <div style="text-align:center">
     <div class="splash-name">Jet Academy</div>
     <div class="splash-sub">Treinamento de Promotores</div>
   </div>
   <div class="splash-bar"><div class="splash-fill"></div></div>
 </div>
 
-<!-- OVERLAY -->
 <div id="overlay" onclick="closeBanner()"></div>
 
-<!-- BANNER INSTALAR -->
 <div id="installBanner">
   <div class="banner-header">
     <img class="banner-icon" src="icons/icon-192x192.png" alt="">
@@ -115,43 +110,31 @@
     </div>
   </div>
 
-  <!-- Steps manuais (iOS / quando não tem prompt nativo) -->
   <div class="banner-steps" id="manualSteps">
-    <div class="step" id="stepAndroid" style="display:none">
-      <div class="step-num">1</div><span>Toque nos 3 pontos <b>⋮</b> no canto superior direito</span>
-    </div>
-    <div class="step" id="stepAndroid2" style="display:none">
-      <div class="step-num">2</div><span>Selecione <b>"Adicionar à tela inicial"</b></span>
-    </div>
-    <div class="step" id="stepAndroid3" style="display:none">
-      <div class="step-num">3</div><span>Toque em <b>"Adicionar"</b> para confirmar</span>
-    </div>
-    <div class="step" id="stepIos" style="display:none">
-      <div class="step-num">1</div><span>Toque no ícone <b>⬆️</b> compartilhar na parte de baixo</span>
-    </div>
-    <div class="step" id="stepIos2" style="display:none">
-      <div class="step-num">2</div><span>Role e toque em <b>"Adicionar à Tela de Início"</b></span>
-    </div>
-    <div class="step" id="stepIos3" style="display:none">
-      <div class="step-num">3</div><span>Toque em <b>"Adicionar"</b> para confirmar</span>
-    </div>
+    <div class="step" id="sA1" style="display:none"><div class="step-num">1</div><span>Toque nos 3 pontos <b>⋮</b> no canto superior direito</span></div>
+    <div class="step" id="sA2" style="display:none"><div class="step-num">2</div><span>Selecione <b>"Adicionar à tela inicial"</b></span></div>
+    <div class="step" id="sA3" style="display:none"><div class="step-num">3</div><span>Toque em <b>"Adicionar"</b> para confirmar</span></div>
+    <div class="step" id="sI1" style="display:none"><div class="step-num">1</div><span>Toque no ícone <b>⬆️</b> compartilhar na barra inferior</span></div>
+    <div class="step" id="sI2" style="display:none"><div class="step-num">2</div><span>Role e toque em <b>"Adicionar à Tela de Início"</b></span></div>
+    <div class="step" id="sI3" style="display:none"><div class="step-num">3</div><span>Toque em <b>"Adicionar"</b> para confirmar</span></div>
   </div>
 
   <div class="banner-btns">
-    <button class="btn-install" id="btnInstall" onclick="handleInstall()">
-      ↓ Instalar agora
-    </button>
+    <button class="btn-install" id="btnInstall" onclick="handleInstall()">↓ Instalar agora</button>
     <button class="btn-later" onclick="closeBanner()">Depois</button>
   </div>
 </div>
 
 <script>
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbwf06-v_N-rtDBgKGrT9SkszDznsxfrYCKIJKPVKxT0OAVVuXUuQ7TVd_3_lg1cgI3cRA/exec';
+var GAS = 'https://script.google.com/macros/s/AKfycbwf06-v_N-rtDBgKGrT9SkszDznsxfrYCKIJKPVKxT0OAVVuXUuQ7TVd_3_lg1cgI3cRA/exec';
 var deferredPrompt = null;
 var isIos = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-var isAndroid = /Android/i.test(navigator.userAgent);
-var isInStandalone = window.matchMedia('(display-mode: standalone)').matches
-  || window.navigator.standalone === true;
+var isStandalone = window.matchMedia('(display-mode:standalone)').matches || navigator.standalone === true;
+
+// Registrar Service Worker (obrigatório para o Chrome oferecer instalação)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
 
 // Capturar evento nativo do Chrome Android
 window.addEventListener('beforeinstallprompt', function(e) {
@@ -160,11 +143,10 @@ window.addEventListener('beforeinstallprompt', function(e) {
 });
 
 function goToApp() {
-  window.location.replace(GAS_URL);
+  window.location.replace(GAS);
 }
 
 function showBanner() {
-  if (isInStandalone) { goToApp(); return; }
   document.getElementById('installBanner').classList.add('show');
   document.getElementById('overlay').classList.add('show');
 }
@@ -172,55 +154,54 @@ function showBanner() {
 function closeBanner() {
   document.getElementById('installBanner').classList.remove('show');
   document.getElementById('overlay').classList.remove('show');
-  document.getElementById('manualSteps').classList.remove('visible');
-  try { localStorage.setItem('ja_banner_dismissed', Date.now()); } catch(e) {}
+  try { localStorage.setItem('ja_dismissed', Date.now()); } catch(e) {}
 }
 
 function handleInstall() {
   if (deferredPrompt) {
+    // Chrome Android: prompt nativo
     deferredPrompt.prompt();
     deferredPrompt.userChoice.then(function(r) {
       deferredPrompt = null;
-      if (r.outcome === 'accepted') closeBanner();
+      closeBanner();
     });
   } else {
-    // iOS ou Chrome sem prompt: mostrar passos manuais
-    var steps = document.getElementById('manualSteps');
-    steps.classList.add('visible');
-    var androidEls = ['stepAndroid','stepAndroid2','stepAndroid3'];
-    var iosEls = ['stepIos','stepIos2','stepIos3'];
-    var els = isIos ? iosEls : androidEls;
-    els.forEach(function(id) {
-      document.getElementById(id).style.display = 'flex';
-    });
-    document.getElementById('btnInstall').textContent = 'Entendi ✓';
-    document.getElementById('btnInstall').onclick = closeBanner;
+    // iOS ou sem prompt: mostrar passos manuais
+    document.getElementById('manualSteps').classList.add('visible');
+    var els = isIos ? ['sI1','sI2','sI3'] : ['sA1','sA2','sA3'];
+    els.forEach(function(id){ document.getElementById(id).style.display='flex'; });
+    var btn = document.getElementById('btnInstall');
+    btn.textContent = 'Entendi ✓';
+    btn.onclick = closeBanner;
   }
 }
 
 function shouldShowBanner() {
-  if (isInStandalone) return false;
+  if (isStandalone) return false;
   try {
-    var dismissed = localStorage.getItem('ja_banner_dismissed');
-    if (dismissed && Date.now() - parseInt(dismissed) < 86400000) return false;
+    var d = localStorage.getItem('ja_dismissed');
+    if (d && Date.now() - parseInt(d) < 86400000) return false;
   } catch(e) {}
   return true;
 }
 
-// Após splash: mostrar banner ou ir direto pro app
+// Após splash
 window.addEventListener('load', function() {
   setTimeout(function() {
     document.getElementById('splash').classList.add('hide');
-    if (shouldShowBanner()) {
+    if (isStandalone) {
+      // Já instalado: ir direto pro app
+      setTimeout(goToApp, 400);
+    } else if (shouldShowBanner()) {
       setTimeout(showBanner, 600);
     } else {
-      setTimeout(goToApp, 600);
+      setTimeout(goToApp, 400);
     }
-  }, 1600);
+  }, 1700);
 });
 
-// Após fechar banner: redirecionar pro app
-document.getElementById('installBanner').addEventListener('transitionend', function(e) {
+// Após fechar banner: redirecionar
+document.getElementById('installBanner').addEventListener('transitionend', function() {
   if (!this.classList.contains('show')) {
     setTimeout(goToApp, 300);
   }
